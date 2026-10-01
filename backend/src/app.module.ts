@@ -16,6 +16,8 @@ import { RedisModule } from './redis/redis.module';
         username: config.get('POSTGRES_USER'),
         password: config.get('POSTGRES_PASSWORD'),
         database: config.get('POSTGRES_DB'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
       }),
     }),
     RedisModule,
