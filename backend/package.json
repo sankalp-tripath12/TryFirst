@@ -5,7 +5,8 @@
   "scripts": {
     "build": "nest build",
     "start": "nest start",
-    "start:dev": "nest start --watch"
+    "start:dev": "nest start --watch",
+    "test": "node --test test/concurrency.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^12.1.1",
