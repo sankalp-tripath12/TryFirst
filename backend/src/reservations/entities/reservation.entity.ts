@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 'typeorm';
 
 @Entity('reservations')
+@Index(['customerId', 'idempotencyKey'], { unique: true })
 export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -13,6 +14,9 @@ export class Reservation {
 
   @Column({ default: 'pending' })
   status!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  idempotencyKey!: string | null;
 
   @Column({ type: 'timestamptz' })
   expiresAt!: Date;

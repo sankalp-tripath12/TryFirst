@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Headers } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -13,7 +13,8 @@ export class ReservationsController {
   create(
     @Body() dto: CreateReservationDto,
     @CurrentUser() user: { userId: string; role: string },
+    @Headers('idempotency-key') key?: string,
   ) {
-    return this.reservationsService.create(dto.variantId, user.userId);
+    return this.reservationsService.create(dto.variantId, user.userId, key);
   }
 }

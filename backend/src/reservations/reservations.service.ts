@@ -8,39 +8,66 @@ import { InventoryEvent } from '../inventory/entities/inventory-event.entity';
 export class ReservationsService {
   constructor(private dataSource: DataSource) {}
 
-  async create(variantId: string, customerId: string) {
-    return this.dataSource.transaction(async (manager) => {
-      const variant = await manager.findOne(ProductVariant, { where: { id: variantId }, lock: { mode: 'pessimistic_write' } });
-      if (!variant) {
-        throw new NotFoundException('Variant not found');
-      }
-      if (variant.stock < 1) {
-        throw new ConflictException('Out of stock');
-      }
+  private findByKey(customerId: string, key: string) {
+    return this.dataSource
+      .getRepository(Reservation)
+      .findOne({ where: { customerId, idempotencyKey: key } });
+  }
 
-      const previousStock = variant.stock;
-      variant.stock = previousStock - 1;
-      await manager.save(variant);
+  async create(variantId: string, customerId: string, key?: string) {
+    // Retry of a request we already handled: return the same reservation
+    if (key) {
+      const existing = await this.findByKey(customerId, key);
+      if (existing) return existing;
+    }
 
-      const reservation = manager.create(Reservation, {
-        variantId,
-        customerId,
-        expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-      });
-      await manager.save(reservation);
+    try {
+      return await this.dataSource.transaction(async (manager) => {
+        const variant = await manager.findOne(ProductVariant, {
+          where: { id: variantId },
+          lock: { mode: 'pessimistic_write' },
+        });
+        if (!variant) {
+          throw new NotFoundException('Variant not found');
+        }
+        if (variant.stock < 1) {
+          throw new ConflictException('Out of stock');
+        }
 
-      await manager.save(
-        manager.create(InventoryEvent, {
+        const previousStock = variant.stock;
+        variant.stock = previousStock - 1;
+        await manager.save(variant);
+
+        const reservation = manager.create(Reservation, {
           variantId,
-          eventType: 'RESERVED',
-          quantityChange: -1,
-          previousStock,
-          newStock: variant.stock,
-          reservationId: reservation.id,
-        }),
-      );
+          customerId,
+          idempotencyKey: key ?? null,
+          expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+        });
+        await manager.save(reservation);
 
-      return reservation;
-    });
+        await manager.save(
+          manager.create(InventoryEvent, {
+            variantId,
+            eventType: 'RESERVED',
+            quantityChange: -1,
+            previousStock,
+            newStock: variant.stock,
+            reservationId: reservation.id,
+          }),
+        );
+
+        return reservation;
+      });
+    } catch (err: any) {
+      // Two identical requests at the same instant: the unique rule rejected
+      // the second one and rolled back its stock change. Return the first.
+      const code = err?.driverError?.code ?? err?.code;
+      if (key && code === '23505') {
+        const existing = await this.findByKey(customerId, key);
+        if (existing) return existing;
+      }
+      throw err;
+    }
   }
 }
