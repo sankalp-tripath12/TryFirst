@@ -10,7 +10,7 @@ export class ReservationsService {
 
   async create(variantId: string, customerId: string) {
     return this.dataSource.transaction(async (manager) => {
-      const variant = await manager.findOne(ProductVariant, { where: { id: variantId } });
+      const variant = await manager.findOne(ProductVariant, { where: { id: variantId }, lock: { mode: 'pessimistic_write' } });
       if (!variant) {
         throw new NotFoundException('Variant not found');
       }

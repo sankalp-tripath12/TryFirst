@@ -14,9 +14,9 @@ export class Reservation {
   @Column({ default: 'pending' })
   status!: string;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   expiresAt!: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 }
