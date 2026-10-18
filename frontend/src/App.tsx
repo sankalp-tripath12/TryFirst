@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LoginPage from './pages/LoginPage';
+import ProductsPage from './pages/ProductsPage';
 import { getToken, setToken } from './services/api';
 
 export default function App() {
@@ -8,13 +9,15 @@ export default function App() {
   if (!loggedIn) return <LoginPage onLoggedIn={() => setLoggedIn(true)} />;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">TryFirst</h1>
-      <p>You are logged in.</p>
-      <button className="mt-4 underline"
-        onClick={() => { setToken(null); setLoggedIn(false); }}>
-        Log out
-      </button>
+    <div>
+      <header className="flex items-center justify-between border-b p-4">
+        <h1 className="text-xl font-bold">TryFirst</h1>
+        <button className="underline"
+          onClick={() => { setToken(null); setLoggedIn(false); }}>
+          Log out
+        </button>
+      </header>
+      <ProductsPage />
     </div>
   );
 }
