@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react';
+import LoginPage from './pages/LoginPage';
+import { getToken, setToken } from './services/api';
 
-function App() {
-  const [status, setStatus] = useState('checking...')
+export default function App() {
+  const [loggedIn, setLoggedIn] = useState(!!getToken());
 
-  useEffect(() => {
-    fetch('http://localhost:4000/health')
-      .then((res) => res.json())
-      .then((data) => setStatus(data.status))
-      .catch(() => setStatus('backend not reachable'))
-  }, [])
+  if (!loggedIn) return <LoginPage onLoggedIn={() => setLoggedIn(true)} />;
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold">TryFirst</h1>
-      <p>Backend status: {status}</p>
+      <p>You are logged in.</p>
+      <button className="mt-4 underline"
+        onClick={() => { setToken(null); setLoggedIn(false); }}>
+        Log out
+      </button>
     </div>
-  )
+  );
 }
-
-export default App
