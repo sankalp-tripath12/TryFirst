@@ -5,6 +5,7 @@ import { Product } from './entities/product.entity';
 import { ProductVariant } from './entities/product-variant.entity';
 import { Shop } from '../shops/entities/shop.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { SearchProductsDto } from './dto/search-products.dto';
 
 @Injectable()
 export class ProductsService {
@@ -43,5 +44,36 @@ export class ProductsService {
     await this.variants.save(variantRows);
 
     return { ...product, variants: variantRows };
+  }
+
+  async search(f: SearchProductsDto) {
+    const qb = this.variants
+      .createQueryBuilder('v')
+      .innerJoin(Product, 'p', 'p.id::text = v."productId"')
+      .innerJoin(Shop, 's', 's.id::text = p."shopId"')
+      .select([
+        'p.id AS "productId"',
+        'p.name AS name',
+        'p.description AS description',
+        'p.category AS category',
+        's.id AS "shopId"',
+        's.name AS "shopName"',
+        's.address AS "shopAddress"',
+        'v.id AS "variantId"',
+        'v.size AS size',
+        'v.color AS color',
+        'v.price AS price',
+        'v.stock AS stock',
+      ])
+      .where('v.stock > 0');
+
+    if (f.q) qb.andWhere('p.name ILIKE :q', { q: '%' + f.q + '%' });
+    if (f.category) qb.andWhere('p.category = :category', { category: f.category });
+    if (f.size) qb.andWhere('v.size = :size', { size: f.size });
+    if (f.color) qb.andWhere('v.color = :color', { color: f.color });
+    if (f.minPrice !== undefined) qb.andWhere('v.price >= :minPrice', { minPrice: f.minPrice });
+    if (f.maxPrice !== undefined) qb.andWhere('v.price <= :maxPrice', { maxPrice: f.maxPrice });
+
+    return qb.orderBy('v.price', 'ASC').getRawMany();
   }
 }
