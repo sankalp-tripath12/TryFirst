@@ -20,6 +20,10 @@ export async function api(path: string, options: { method?: string; body?: unkno
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
   const data = await res.json().catch(() => null);
+  if (res.status === 401 && token) {
+    setToken(null);
+    window.location.reload();
+  }
   if (!res.ok) {
     const msg = Array.isArray(data?.message) ? data.message.join(', ') : data?.message;
     throw new Error(msg || 'Request failed');
