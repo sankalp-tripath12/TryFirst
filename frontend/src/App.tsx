@@ -2,13 +2,16 @@ import { useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import ProductsPage from './pages/ProductsPage';
 import ReservationsPage from './pages/ReservationsPage';
-import { getToken, setToken } from './services/api';
+import DashboardPage from './pages/DashboardPage';
+import { getToken, getRole, setToken } from './services/api';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(!!getToken());
-  const [page, setPage] = useState<'shop' | 'mine'>('shop');
+  const [page, setPage] = useState<'shop' | 'mine' | 'dash'>('shop');
 
-  if (!loggedIn) return <LoginPage onLoggedIn={() => setLoggedIn(true)} />;
+  if (!loggedIn) return <LoginPage onLoggedIn={() => { setPage('shop'); setLoggedIn(true); }} />;
+
+  const isShopkeeper = getRole() === 'shopkeeper';
 
   return (
     <div>
@@ -19,11 +22,17 @@ export default function App() {
             onClick={() => setPage('shop')}>Shop</button>
           <button className={page === 'mine' ? 'font-bold underline' : ''}
             onClick={() => setPage('mine')}>My reservations</button>
+          {isShopkeeper && (
+            <button className={page === 'dash' ? 'font-bold underline' : ''}
+              onClick={() => setPage('dash')}>Dashboard</button>
+          )}
           <button className="underline"
             onClick={() => { setToken(null); setLoggedIn(false); }}>Log out</button>
         </nav>
       </header>
-      {page === 'shop' ? <ProductsPage /> : <ReservationsPage />}
+      {page === 'shop' && <ProductsPage />}
+      {page === 'mine' && <ReservationsPage />}
+      {page === 'dash' && isShopkeeper && <DashboardPage />}
     </div>
   );
 }

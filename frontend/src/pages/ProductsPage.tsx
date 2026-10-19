@@ -22,6 +22,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -44,6 +45,8 @@ export default function ProductsPage() {
   }, []);
 
   async function reserve(variantId: string) {
+    if (busy) return;
+    setBusy(true);
     setMessage('');
     try {
       await api('/reservations', { method: 'POST', body: { variantId } });
@@ -52,6 +55,7 @@ export default function ProductsPage() {
     } catch (err) {
       setMessage((err as Error).message);
     }
+    setBusy(false);
   }
 
   return (
@@ -98,7 +102,8 @@ export default function ProductsPage() {
             <p className="font-bold">₹{it.price}</p>
             <p className="text-sm">{it.stock} in stock</p>
             <button onClick={() => reserve(it.variantId)}
-              className="mt-2 w-full rounded bg-black p-2 text-white">
+              disabled={busy}
+              className="mt-2 w-full rounded bg-black p-2 text-white disabled:opacity-50">
               Reserve
             </button>
           </div>

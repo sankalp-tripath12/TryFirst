@@ -30,3 +30,13 @@ export async function api(path: string, options: { method?: string; body?: unkno
   }
   return data;
 }
+
+export function getRole(): string {
+  const token = getToken();
+  if (!token) return '';
+  try {
+    return JSON.parse(atob(token.split('.')[1])).role;
+  } catch {
+    return '';
+  }
+}

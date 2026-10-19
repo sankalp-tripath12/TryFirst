@@ -7,6 +7,11 @@ type Reservation = {
   status: string;
   expiresAt: string;
   createdAt: string;
+  productName: string;
+  size: string;
+  color: string;
+  price: string;
+  shopName: string;
 };
 
 export default function ReservationsPage() {
@@ -65,7 +70,8 @@ export default function ReservationsPage() {
 
       {items.map((r) => (
         <div key={r.id} className="mb-3 rounded border p-3">
-          <p className="font-semibold capitalize">{r.status}</p>
+          <p className="font-semibold">{r.productName} ({r.size}, {r.color}) ₹{r.price}</p>
+          <p className="text-sm">{r.shopName} · <span className="capitalize">{r.status}</span></p>
           <p className="text-sm text-gray-600">
             Reserved {new Date(r.createdAt).toLocaleString()}
             {r.status === 'pending' && ', hold ends ' + new Date(r.expiresAt).toLocaleTimeString()}
