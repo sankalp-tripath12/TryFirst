@@ -38,4 +38,11 @@ export class ReservationsController {
   purchase(@Param('id') id: string, @CurrentUser() user: { userId: string; role: string }) {
     return this.reservationsService.purchase(id, user.userId);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('shopkeeper')
+  @Get('shop')
+  shop(@CurrentUser() user: { userId: string; role: string }) {
+    return this.reservationsService.shopReservations(user.userId);
+  }
 }

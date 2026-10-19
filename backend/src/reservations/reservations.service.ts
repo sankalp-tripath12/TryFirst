@@ -73,11 +73,28 @@ export class ReservationsService {
     }
   }
 
+  private readonly listSql =
+    'SELECT r.id, r."variantId", r.status, r."expiresAt", r."createdAt", ' +
+    'p.name AS "productName", v.size, v.color, v.price, s.name AS "shopName", ' +
+    'u.email AS "customerEmail" ' +
+    'FROM reservations r ' +
+    'JOIN product_variants v ON v.id::text = r."variantId" ' +
+    'JOIN products p ON p.id::text = v."productId" ' +
+    'JOIN shops s ON s.id::text = p."shopId" ' +
+    'LEFT JOIN users u ON u.id::text = r."customerId" ';
+
   mine(customerId: string) {
-    return this.dataSource.getRepository(Reservation).find({
-      where: { customerId },
-      order: { createdAt: 'DESC' },
-    });
+    return this.dataSource.query(
+      this.listSql + 'WHERE r."customerId" = $1 ORDER BY r."createdAt" DESC',
+      [customerId],
+    );
+  }
+
+  shopReservations(ownerId: string) {
+    return this.dataSource.query(
+      this.listSql + 'WHERE s."ownerId" = $1 ORDER BY r."createdAt" DESC',
+      [ownerId],
+    );
   }
 
   async cancel(id: string, customerId: string) {
