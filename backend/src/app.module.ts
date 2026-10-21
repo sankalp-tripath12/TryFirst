@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ShopsModule } from './shops/shops.module';
 import { ProductsModule } from './products/products.module';
 import { QualityCheckModule } from './quality-check/quality-check.module';
+import { ShoppingPlannerModule } from './shopping-planner/shopping-planner.module';
 import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
@@ -33,6 +34,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     ShopsModule,
     ProductsModule,
     ReservationsModule,
+    ShoppingPlannerModule,
     QualityCheckModule,
   ],
 })
