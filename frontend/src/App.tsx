@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import ProductsPage from './pages/ProductsPage';
 import ReservationsPage from './pages/ReservationsPage';
 import DashboardPage from './pages/DashboardPage';
+import PlannerPage from './pages/PlannerPage';
 import { getToken, getRole, setToken } from './services/api';
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
         </nav>
       </header>
       {page === 'shop' && <ProductsPage />}
+      {page === 'plan' && <PlannerPage />}
       {page === 'mine' && <ReservationsPage />}
       {page === 'dash' && isShopkeeper && <DashboardPage />}
     </div>
