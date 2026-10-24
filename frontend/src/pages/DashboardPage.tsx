@@ -74,50 +74,50 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4">
       <h2 className="text-xl font-bold">Shop dashboard</h2>
-      {message && <p className="rounded bg-gray-100 p-2">{message}</p>}
+      {message && <p className="rounded-xl bg-indigo-50 p-3 text-indigo-800">{message}</p>}
 
-      <form onSubmit={createShop} className="space-y-2 rounded border p-3">
+      <form onSubmit={createShop} className="space-y-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
         <h3 className="font-semibold">Create a shop</h3>
-        <input className="w-full rounded border p-2" placeholder="Shop name" value={shopName}
+        <input className="w-full rounded-xl border border-slate-300 p-2.5" placeholder="Shop name" value={shopName}
           onChange={(e) => setShopName(e.target.value)} />
-        <input className="w-full rounded border p-2" placeholder="Address" value={shopAddress}
+        <input className="w-full rounded-xl border border-slate-300 p-2.5" placeholder="Address" value={shopAddress}
           onChange={(e) => setShopAddress(e.target.value)} />
-        <button className="rounded bg-black px-4 py-2 text-white">Create shop</button>
+        <button className="rounded-xl bg-indigo-600 px-5 py-2 font-medium text-white hover:bg-indigo-700">Create shop</button>
       </form>
 
-      <form onSubmit={createProduct} className="space-y-2 rounded border p-3">
+      <form onSubmit={createProduct} className="space-y-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
         <h3 className="font-semibold">Add a product</h3>
-        <input className="w-full rounded border p-2" placeholder="Shop id" value={shopId}
+        <input className="w-full rounded-xl border border-slate-300 p-2.5" placeholder="Shop id" value={shopId}
           onChange={(e) => setShopId(e.target.value)} />
-        <input className="w-full rounded border p-2" placeholder="Product name" value={p.name}
+        <input className="w-full rounded-xl border border-slate-300 p-2.5" placeholder="Product name" value={p.name}
           onChange={(e) => setP({ ...p, name: e.target.value })} />
-        <input className="w-full rounded border p-2" placeholder="Description" value={p.description}
+        <input className="w-full rounded-xl border border-slate-300 p-2.5" placeholder="Description" value={p.description}
           onChange={(e) => setP({ ...p, description: e.target.value })} />
         <div className="flex flex-wrap gap-2">
-          <select className="rounded border p-2" value={p.category}
+          <select className="rounded-xl border border-slate-300 p-2.5" value={p.category}
             onChange={(e) => setP({ ...p, category: e.target.value })}>
             <option>shirts</option><option>jeans</option><option>trousers</option>
             <option>kurtas</option><option>tshirts</option>
           </select>
-          <select className="rounded border p-2" value={p.size}
+          <select className="rounded-xl border border-slate-300 p-2.5" value={p.size}
             onChange={(e) => setP({ ...p, size: e.target.value })}>
             <option>S</option><option>M</option><option>L</option><option>XL</option>
           </select>
-          <input className="w-28 rounded border p-2" placeholder="Color" value={p.color}
+          <input className="w-28 rounded-xl border border-slate-300 p-2.5" placeholder="Color" value={p.color}
             onChange={(e) => setP({ ...p, color: e.target.value })} />
-          <input className="w-28 rounded border p-2" placeholder="Price" value={p.price}
+          <input className="w-28 rounded-xl border border-slate-300 p-2.5" placeholder="Price" value={p.price}
             onChange={(e) => setP({ ...p, price: e.target.value })} />
-          <input className="w-28 rounded border p-2" placeholder="Stock" value={p.stock}
+          <input className="w-28 rounded-xl border border-slate-300 p-2.5" placeholder="Stock" value={p.stock}
             onChange={(e) => setP({ ...p, stock: e.target.value })} />
         </div>
-        <button className="rounded bg-black px-4 py-2 text-white">Add product</button>
+        <button className="rounded-xl bg-indigo-600 px-5 py-2 font-medium text-white hover:bg-indigo-700">Add product</button>
       </form>
 
       <div>
         <h3 className="mb-2 font-semibold">Reservations on your shops</h3>
         {rows.length === 0 && <p>No reservations yet.</p>}
         {rows.map((r) => (
-          <div key={r.id} className="mb-2 rounded border p-3">
+          <div key={r.id} className="mb-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
             <p className="font-semibold">{r.productName} ({r.size}, {r.color})</p>
             <p className="text-sm text-gray-600">
               {r.customerEmail} · <span className="capitalize">{r.status}</span> ·{' '}
@@ -125,7 +125,7 @@ export default function DashboardPage() {
             </p>
             {r.status === 'pending' && (
               <button onClick={() => markPurchased(r.id)}
-                className="mt-2 rounded bg-black px-3 py-1 text-white">
+                className="mt-2 rounded-xl bg-indigo-600 px-4 py-1.5 font-medium text-white hover:bg-indigo-700">
                 Mark purchased
               </button>
             )}
