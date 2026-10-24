@@ -38,6 +38,17 @@ export default function ProductsPage() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [similar, setSimilar] = useState<any[] | null>(null);
+  const [similarFor, setSimilarFor] = useState('');
+
+  async function showSimilar(variantId: string, name: string) {
+    try {
+      setSimilar(await api('/recommendations/' + variantId));
+      setSimilarFor(name);
+    } catch (err) {
+      setMessage((err as Error).message);
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -108,6 +119,21 @@ export default function ProductsPage() {
       {loading && <p>Loading...</p>}
       {!loading && !error && items.length === 0 && <p>No products match your search.</p>}
 
+      {similar && (
+        <div className="mb-4 rounded-2xl bg-indigo-50 p-4 ring-1 ring-indigo-200">
+          <div className="mb-2 flex justify-between">
+            <b className="text-indigo-800">You might also like (similar to {similarFor})</b>
+            <button className="text-sm underline" onClick={() => setSimilar(null)}>Close</button>
+          </div>
+          {similar.map((r) => (
+            <div key={r.variantId} className="mb-2 rounded-xl bg-white p-3 text-sm">
+              <b>{r.name}</b> · size {r.size}, {r.color} · ₹{r.price} · {r.shopName}
+              <p className="text-slate-500">{r.why}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {items.map((it) => (
           <div key={it.variantId}
@@ -127,6 +153,10 @@ export default function ProductsPage() {
             <button onClick={() => reserve(it.variantId)} disabled={busy}
               className="mt-3 w-full rounded-xl bg-indigo-600 p-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-50">
               Reserve
+            </button>
+            <button onClick={() => showSimilar(it.variantId, it.name)}
+              className="mt-2 w-full text-sm text-indigo-600 underline">
+              Show similar items
             </button>
           </div>
         ))}
