@@ -65,15 +65,15 @@ export default function PlannerPage() {
       <h2 className="mb-3 text-xl font-bold">Plan my shopping</h2>
       <form onSubmit={search} className="mb-4 flex flex-wrap items-end gap-2">
         <label className="text-sm">Budget
-          <input className="block w-28 rounded border p-2" value={budget}
+          <input className="block w-28 rounded-xl border border-slate-300 bg-white p-2.5" value={budget}
             onChange={(e) => setBudget(e.target.value)} />
         </label>
         <label className="text-sm">Minutes
-          <input className="block w-28 rounded border p-2" value={minutes}
+          <input className="block w-28 rounded-xl border border-slate-300 bg-white p-2.5" value={minutes}
             onChange={(e) => setMinutes(e.target.value)} />
         </label>
         <label className="text-sm">Occasion
-          <select className="block rounded border p-2" value={occasion}
+          <select className="block rounded-xl border border-slate-300 bg-white p-2.5" value={occasion}
             onChange={(e) => setOccasion(e.target.value)}>
             <option>casual</option>
             <option>formal</option>
@@ -81,20 +81,20 @@ export default function PlannerPage() {
             <option>party</option>
           </select>
         </label>
-        <button className="rounded bg-black px-4 py-2 text-white">Make a plan</button>
+        <button className="rounded-xl bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700">Make a plan</button>
       </form>
-      {message && <p className="mb-3 rounded bg-gray-100 p-2">{message}</p>}
+      {message && <p className="mb-4 rounded-xl bg-indigo-50 p-3 text-indigo-800">{message}</p>}
       {error && <p className="text-red-600">{error}</p>}
       {plans && plans.length === 0 && !error && <p>No plan fits that budget.</p>}
 
       {plans && plans.map((plan, i) => (
-        <div key={i} className="mb-4 rounded border p-3">
+        <div key={i} className="mb-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
           <p className="font-semibold capitalize">
             {plan.kind} plan · ₹{plan.totalCost} · {plan.shops} shop(s)
           </p>
           <p className="text-sm">
             About {plan.timeMinutes} min vs about {plan.baselineMinutes} min the usual way.{' '}
-            <b>You save {plan.savedMinutes} min.</b>
+            <b className="rounded-full bg-green-100 px-2 py-0.5 text-green-700">You save {plan.savedMinutes} min</b>
             {!plan.fitsTimeLimit && <span className="text-red-600"> Over your time limit.</span>}
           </p>
           <ul className="my-2 text-sm">
@@ -105,7 +105,7 @@ export default function PlannerPage() {
             ))}
           </ul>
           <button onClick={() => reservePlan(plan)}
-            className="rounded bg-black px-3 py-1 text-white">Reserve all items</button>
+            className="rounded-xl bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700">Reserve all items</button>
         </div>
       ))}
     </div>

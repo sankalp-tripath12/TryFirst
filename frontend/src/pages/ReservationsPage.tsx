@@ -64,12 +64,12 @@ export default function ReservationsPage() {
   return (
     <div className="mx-auto max-w-3xl p-4">
       <h2 className="mb-3 text-xl font-bold">My reservations</h2>
-      {message && <p className="mb-3 rounded bg-gray-100 p-2">{message}</p>}
+      {message && <p className="mb-4 rounded-xl bg-indigo-50 p-3 text-indigo-800">{message}</p>}
       {loading && <p>Loading...</p>}
       {!loading && items.length === 0 && <p>No reservations yet.</p>}
 
       {items.map((r) => (
-        <div key={r.id} className="mb-3 rounded border p-3">
+        <div key={r.id} className="mb-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
           <p className="font-semibold">{r.productName} ({r.size}, {r.color}) ₹{r.price}</p>
           <p className="text-sm">{r.shopName} · <span className="capitalize">{r.status}</span></p>
           <p className="text-sm text-gray-600">
@@ -79,18 +79,18 @@ export default function ReservationsPage() {
 
           {r.status === 'pending' && (
             <div className="mt-2 flex gap-2">
-              <button onClick={() => cancel(r.id)} className="rounded border px-3 py-1">
+              <button onClick={() => cancel(r.id)} className="rounded-xl border border-slate-300 px-4 py-1.5 hover:bg-slate-50">
                 Cancel
               </button>
               <button onClick={() => setReviewing(reviewing === r.id ? '' : r.id)}
-                className="rounded bg-black px-3 py-1 text-white">
+                className="rounded-xl bg-indigo-600 px-4 py-1.5 font-medium text-white hover:bg-indigo-700">
                 Quality check
               </button>
             </div>
           )}
           {r.status === 'purchased' && (
             <button onClick={() => setReviewing(reviewing === r.id ? '' : r.id)}
-              className="mt-2 rounded bg-black px-3 py-1 text-white">
+              className="mt-2 rounded-xl bg-indigo-600 px-4 py-1.5 font-medium text-white">
               Rate this item
             </button>
           )}
@@ -115,7 +115,7 @@ export default function ReservationsPage() {
                 </label>
               ))}
               <button onClick={() => submitReview(r.id)}
-                className="rounded bg-black px-3 py-1 text-white">
+                className="rounded-xl bg-indigo-600 px-4 py-1.5 font-medium text-white hover:bg-indigo-700">
                 Submit review
               </button>
             </div>
