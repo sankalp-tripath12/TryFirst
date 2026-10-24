@@ -7,7 +7,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "test": "node --test test/concurrency.test.mjs",
-    "seed": "node test/seed.mjs"
+    "seed": "node test/seed.mjs",
+    "test:race": "node --test test/race.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^12.1.1",
