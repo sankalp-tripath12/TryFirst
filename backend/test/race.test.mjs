@@ -37,7 +37,7 @@ async function makeUser(prefix, shopkeeper) {
   return login.data.token;
 }
 
-test('20 parallel requests for the last unit: exactly 1 succeeds', async () => {
+test('60 parallel requests for the last unit: exactly 1 succeeds', async () => {
   const owner = await makeUser('owner', true);
   const customer = await makeUser('cust', false);
   const shop = await post('/shops', { name: 'Race Shop', address: '1 Race Road' }, owner);
