@@ -12,6 +12,7 @@ type Item = {
   price: string;
   stock: number;
   confidence: string;
+  distanceKm?: number | null;
 };
 
 
@@ -39,6 +40,8 @@ export default function ProductsPage() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [maxKm, setMaxKm] = useState('');
   const [similar, setSimilar] = useState<any[] | null>(null);
   const [similarFor, setSimilarFor] = useState('');
 
@@ -59,6 +62,11 @@ export default function ProductsPage() {
     if (category) params.set('category', category);
     if (size) params.set('size', size);
     if (maxPrice) params.set('maxPrice', maxPrice);
+    if (coords) {
+      params.set('lat', String(coords.lat));
+      params.set('lng', String(coords.lng));
+      if (maxKm) params.set('maxKm', maxKm);
+    }
     try {
       setItems(await api('/products?' + params.toString()));
     } catch (err) {
@@ -112,6 +120,20 @@ export default function ProductsPage() {
         </select>
         <input className="w-32 rounded-xl border border-slate-300 bg-white p-2.5" placeholder="Max price" value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)} />
+                <button type="button"
+          onClick={() => navigator.geolocation.getCurrentPosition(
+            (pos) => { setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setMessage('Location set. Click Search.'); },
+            () => setMessage('Could not get your location.'))}
+          className="rounded-xl border border-indigo-300 bg-white px-4 text-indigo-700 hover:bg-indigo-50">
+          {coords ? 'Location on' : 'Use my location'}
+        </button>
+        <select className="rounded-xl border border-slate-300 bg-white p-2.5" value={maxKm}
+          onChange={(e) => setMaxKm(e.target.value)}>
+          <option value="">Any distance</option>
+          <option value="10">Within 10 km</option>
+          <option value="50">Within 50 km</option>
+          <option value="300">Within 300 km</option>
+        </select>
         <button className="rounded-xl bg-indigo-600 px-5 font-medium text-white hover:bg-indigo-700">Search</button>
       </form>
 
@@ -152,7 +174,7 @@ export default function ProductsPage() {
             </div>
             <h2 className="text-lg font-semibold text-slate-900">{it.name}</h2>
             <p className="text-sm text-slate-500">{it.shopName} · {it.shopAddress}</p>
-            <p className="mt-2 text-sm text-slate-600">Size {it.size} · {it.color}</p>
+            <p className="mt-2 text-sm text-slate-600">Size {it.size} · {it.color}{it.distanceKm != null && ' · ' + it.distanceKm + ' km away'}</p>
             <p className="mt-1 text-xl font-bold text-indigo-600">₹{it.price}</p>
             <button onClick={() => reserve(it.variantId)} disabled={busy}
               className="mt-3 w-full rounded-xl bg-indigo-600 p-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-50">

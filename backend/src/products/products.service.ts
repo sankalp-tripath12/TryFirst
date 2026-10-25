@@ -81,7 +81,7 @@ export class ProductsService {
         '6371 * acos(LEAST(1, cos(radians(:lat)) * cos(radians(s.latitude)) * ' +
         'cos(radians(s.longitude) - radians(:lng)) + sin(radians(:lat)) * sin(radians(s.latitude))))';
       qb.addSelect(dist, 'distanceKm').setParameters({ lat: f.lat, lng: f.lng });
-      if (f.maxKm !== undefined) qb.andWhere(dist + ' <= :maxKm', { maxKm: f.maxKm });
+      if (f.maxKm !== undefined) qb.andWhere('s.latitude IS NOT NULL AND ' + dist + ' <= :maxKm', { maxKm: f.maxKm });
     }
     const rows = await qb.orderBy('v.price', 'ASC').getRawMany();
     return rows.map((r) => {
