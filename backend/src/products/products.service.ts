@@ -64,6 +64,7 @@ export class ProductsService {
         'v.color AS color',
         'v.price AS price',
         'v.stock AS stock',
+        `GREATEST(v."createdAt", COALESCE((SELECT MAX(e."createdAt") FROM inventory_events e WHERE e."variantId" = v.id::text), v."createdAt")) AS "lastSync"`,
       ])
       .where('v.stock > 0');
 
@@ -74,6 +75,11 @@ export class ProductsService {
     if (f.minPrice !== undefined) qb.andWhere('v.price >= :minPrice', { minPrice: f.minPrice });
     if (f.maxPrice !== undefined) qb.andWhere('v.price <= :maxPrice', { maxPrice: f.maxPrice });
 
-    return qb.orderBy('v.price', 'ASC').getRawMany();
+    const rows = await qb.orderBy('v.price', 'ASC').getRawMany();
+    return rows.map((r) => {
+      const hours = (Date.now() - new Date(r.lastSync).getTime()) / 3600000;
+      const confidence = hours < 24 ? 'green' : hours < 24 * 7 ? 'yellow' : 'red';
+      return { ...r, confidence };
+    });
   }
 }

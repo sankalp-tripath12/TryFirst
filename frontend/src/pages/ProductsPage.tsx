@@ -11,6 +11,7 @@ type Item = {
   color: string;
   price: string;
   stock: number;
+  confidence: string;
 };
 
 
@@ -145,6 +146,9 @@ export default function ProductsPage() {
               <span className={'rounded-full px-2.5 py-0.5 text-xs font-medium ' + stockPill(it.stock)}>
                 {it.stock} left
               </span>
+              <span title="How recently this stock was confirmed"
+                className={'ml-1 inline-block h-3 w-3 rounded-full ' +
+                  (it.confidence === 'green' ? 'bg-green-500' : it.confidence === 'yellow' ? 'bg-amber-400' : 'bg-red-500')} />
             </div>
             <h2 className="text-lg font-semibold text-slate-900">{it.name}</h2>
             <p className="text-sm text-slate-500">{it.shopName} · {it.shopAddress}</p>
