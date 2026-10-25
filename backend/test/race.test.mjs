@@ -47,7 +47,7 @@ test('20 parallel requests for the last unit: exactly 1 succeeds', async () => {
   }, owner);
   const variantId = product.data.variants[0].id;
 
-  const codes = await Promise.all(Array.from({ length: 20 }, () => curlReserve(customer, variantId)));
+  const codes = await Promise.all(Array.from({ length: 60 }, () => curlReserve(customer, variantId)));
   const ok = codes.filter((c) => c === 201).length;
   assert.equal(ok, 1, 'expected exactly 1 success, got ' + ok);
 });
