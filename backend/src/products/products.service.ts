@@ -75,11 +75,19 @@ export class ProductsService {
     if (f.minPrice !== undefined) qb.andWhere('v.price >= :minPrice', { minPrice: f.minPrice });
     if (f.maxPrice !== undefined) qb.andWhere('v.price <= :maxPrice', { maxPrice: f.maxPrice });
 
+    const hasGeo = f.lat !== undefined && f.lng !== undefined;
+    if (hasGeo) {
+      const dist =
+        '6371 * acos(LEAST(1, cos(radians(:lat)) * cos(radians(s.latitude)) * ' +
+        'cos(radians(s.longitude) - radians(:lng)) + sin(radians(:lat)) * sin(radians(s.latitude))))';
+      qb.addSelect(dist, 'distanceKm').setParameters({ lat: f.lat, lng: f.lng });
+      if (f.maxKm !== undefined) qb.andWhere(dist + ' <= :maxKm', { maxKm: f.maxKm });
+    }
     const rows = await qb.orderBy('v.price', 'ASC').getRawMany();
     return rows.map((r) => {
       const hours = (Date.now() - new Date(r.lastSync).getTime()) / 3600000;
       const confidence = hours < 24 ? 'green' : hours < 24 * 7 ? 'yellow' : 'red';
-      return { ...r, confidence };
-    });
+      return { ...r, confidence, distanceKm: r.distanceKm == null ? null : Math.round(Number(r.distanceKm) * 10) / 10 };
+    }).sort((a, b) => (hasGeo ? (a.distanceKm ?? 1e9) - (b.distanceKm ?? 1e9) : 0));
   }
 }

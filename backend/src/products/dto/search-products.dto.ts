@@ -27,4 +27,19 @@ export class SearchProductsDto {
   @Type(() => Number)
   @IsNumber()
   maxPrice?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  lat?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  lng?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  maxKm?: number;
 }

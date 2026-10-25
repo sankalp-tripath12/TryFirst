@@ -14,6 +14,12 @@ export class Shop {
   @Column()
   ownerId!: string;
 
+  @Column({ type: 'float', nullable: true })
+  latitude!: number | null;
+
+  @Column({ type: 'float', nullable: true })
+  longitude!: number | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }
