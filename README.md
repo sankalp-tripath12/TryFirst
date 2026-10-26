@@ -41,6 +41,7 @@ How it works:
 5. A scheduled job releases holds that expire (30 minutes) and returns stock.
 
 Run the proof: npm run test:race (in backend/, with the server running).
+The test fails with 'got 8' if the row lock is removed, so it can really catch the bug.
 Note: the test uses separate curl processes, because fetch inside one Node
 process is not concurrent enough to trigger the race.
 
@@ -54,6 +55,9 @@ process is not concurrent enough to trigger the race.
 - Recommendations: cosine similarity over category, color, size and price,
   with a plain-language reason for each result
 - Shopkeeper dashboard (create shop and products, see reservations)
+- Stock confidence indicator (green/yellow/red) computed from last stock update
+- Distance filter: haversine in SQL, shops store latitude/longitude
+- Reservation expiry job and idempotent reservations
 
 ## Run it
 1. docker compose up -d
@@ -65,6 +69,5 @@ Copy .env.example to .env first.
 
 ## Known limits and future work
 - Schema uses synchronize: true; real migrations are still to do.
-- Not built yet: WebSocket live updates, distance filter, stock confidence
-  indicator, natural-language search and AI assistant.
+- Not built yet: WebSocket live updates, natural-language search and AI assistant.
 - Deliberately not built: microservices, Kafka, Elasticsearch, trained ML.
