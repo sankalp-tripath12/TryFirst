@@ -10,6 +10,7 @@ import { ProductsModule } from './products/products.module';
 import { QualityCheckModule } from './quality-check/quality-check.module';
 import { ShoppingPlannerModule } from './shopping-planner/shopping-planner.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+import { AssistantModule } from './assistant/assistant.module';
 import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     ShopsModule,
     ProductsModule,
     ReservationsModule,
+    AssistantModule,
     RecommendationsModule,
     ShoppingPlannerModule,
     QualityCheckModule,
