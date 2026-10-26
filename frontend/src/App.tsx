@@ -4,9 +4,10 @@ import ProductsPage from './pages/ProductsPage';
 import ReservationsPage from './pages/ReservationsPage';
 import DashboardPage from './pages/DashboardPage';
 import PlannerPage from './pages/PlannerPage';
+import AssistantPage from './pages/AssistantPage';
 import { getToken, getRole, setToken } from './services/api';
 
-type Page = 'shop' | 'plan' | 'mine' | 'dash';
+type Page = 'shop' | 'ask' | 'plan' | 'mine' | 'dash';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(!!getToken());
@@ -32,6 +33,7 @@ export default function App() {
           <h1 className="text-xl font-bold text-white">TryFirst</h1>
           <nav className="flex items-center gap-2">
             {tab('shop', 'Shop')}
+            {tab('ask', 'Assistant')}
             {tab('plan', 'Planner')}
             {tab('mine', 'My reservations')}
             {isShopkeeper && tab('dash', 'Dashboard')}
@@ -41,6 +43,7 @@ export default function App() {
         </div>
       </header>
       {page === 'shop' && <ProductsPage />}
+      {page === 'ask' && <AssistantPage />}
       {page === 'plan' && <PlannerPage />}
       {page === 'mine' && <ReservationsPage />}
       {page === 'dash' && isShopkeeper && <DashboardPage />}
