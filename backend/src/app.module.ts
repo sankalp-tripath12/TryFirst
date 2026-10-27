@@ -21,7 +21,7 @@ import { ReservationsModule } from './reservations/reservations.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
+        host: config.get('POSTGRES_HOST') || 'localhost',
         port: Number(config.get('POSTGRES_PORT')),
         username: config.get('POSTGRES_USER'),
         password: config.get('POSTGRES_PASSWORD'),

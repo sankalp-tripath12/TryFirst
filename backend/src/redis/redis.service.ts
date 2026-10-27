@@ -4,7 +4,10 @@ import Redis from 'ioredis';
 @Injectable()
 export class RedisService extends Redis implements OnModuleDestroy {
   constructor() {
-    super({ port: 6380, host: 'localhost' });
+    super({
+      host: process.env.REDIS_HOST || 'localhost',
+      port: Number(process.env.REDIS_PORT) || 6380,
+    });
   }
 
   onModuleDestroy() {
