@@ -97,7 +97,7 @@ export default function ProductsPage() {
     <div className="mx-auto max-w-5xl p-4">
       <form
         onSubmit={(e) => { e.preventDefault(); load(); }}
-        className="mb-4 flex flex-wrap gap-2"
+        className="mb-4 flex flex-wrap items-center gap-2"
       >
         <input className="rounded-xl border border-slate-300 bg-white p-2.5" placeholder="Search name" value={q}
           onChange={(e) => setQ(e.target.value)} />
