@@ -67,6 +67,17 @@ process is not concurrent enough to trigger the race.
 
 Copy .env.example to .env first.
 
+## Run everything in Docker
+docker compose up --build -d
+- App: http://localhost:8080
+- API: http://localhost:4000 (health check at /health)
+Needs a .env in the project root (see .env.example).
+
+## Assistant
+GET /assistant?q=black shirt under 1500 parses the sentence into filters
+(rule-based) and runs the real search, so answers always come from the database.
+An LLM could replace the parser later without changing anything else.
+
 ## Known limits and future work
 - Schema uses synchronize: true; real migrations are still to do.
 - Not built yet: WebSocket live updates, natural-language search and AI assistant.
