@@ -27,6 +27,7 @@ import { ReservationsModule } from './reservations/reservations.module';
         password: config.get('POSTGRES_PASSWORD'),
         database: config.get('POSTGRES_DB'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        ssl: config.get('POSTGRES_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         synchronize: true,
       }),
     }),
