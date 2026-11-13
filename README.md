@@ -82,3 +82,6 @@ An LLM could replace the parser later without changing anything else.
 - Schema uses synchronize: true; real migrations are still to do.
 - Not built yet: WebSocket live updates, natural-language search and AI assistant.
 - Deliberately not built: microservices, Kafka, Elasticsearch, trained ML.
+
+## Live demo
+https://YOUR-STATIC-SITE.onrender.com (free tier, first load may be slow)
