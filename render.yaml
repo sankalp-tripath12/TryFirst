@@ -1,0 +1,51 @@
+databases:
+  - name: tryfirst-db
+    plan: free
+    databaseName: tryfirst
+    user: tryfirst
+
+services:
+  - type: keyvalue
+    name: tryfirst-redis
+    plan: free
+    ipAllowList: []
+
+  - type: web
+    name: tryfirst-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: POSTGRES_HOST
+        fromDatabase: { name: tryfirst-db, property: host }
+      - key: POSTGRES_PORT
+        fromDatabase: { name: tryfirst-db, property: port }
+      - key: POSTGRES_USER
+        fromDatabase: { name: tryfirst-db, property: user }
+      - key: POSTGRES_PASSWORD
+        fromDatabase: { name: tryfirst-db, property: password }
+      - key: POSTGRES_DB
+        fromDatabase: { name: tryfirst-db, property: database }
+      - key: POSTGRES_SSL
+        value: "true"
+      - key: REDIS_HOST
+        fromService: { type: keyvalue, name: tryfirst-redis, property: host }
+      - key: REDIS_PORT
+        fromService: { type: keyvalue, name: tryfirst-redis, property: port }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: FRONTEND_URL
+        sync: false
+
+  - type: web
+    name: tryfirst-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
