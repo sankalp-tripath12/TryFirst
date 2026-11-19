@@ -84,4 +84,4 @@ An LLM could replace the parser later without changing anything else.
 - Deliberately not built: microservices, Kafka, Elasticsearch, trained ML.
 
 ## Live demo
-https://YOUR-STATIC-SITE.onrender.com (free tier, first load may be slow)
+https://REAL-URL-HERE (free tier, first load may be slow)
